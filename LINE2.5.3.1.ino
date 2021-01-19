@@ -41,8 +41,11 @@ unsigned char snakeY[256];
 unsigned char pointer = 4;
 int x    = matrix.width();
 int pass = 0;
+//Sets Snake Color
 int sColor = matrix.Color(255, 102, 0);
+//Sets Cherry Color
 int cColor = matrix.Color(255, 0, 0);
+//Sets the Eat Self Color for Hard Mode.
 int gColor = matrix.Color(91, 215, 213);
 char sbit;
 int pixelNumber;
@@ -135,6 +138,11 @@ void loop() {
       }
 
       // Grabs the player input if they select hard.
+         /*
+       * Hard Mode adds shedding to the game. If the Player hits the shedded skin it will also end the game.
+       * An new item is added to the game that allows the player to eat themselves and the shedded skin, but
+       * eating the item will increase the speed of the snake without increasing the score.
+       */
       if (!digitalRead(12))
       {
         Hard = true;
