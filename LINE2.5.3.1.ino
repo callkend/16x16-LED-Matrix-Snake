@@ -13,20 +13,21 @@
 #ifndef PSTR
 #define PSTR // Make Arduino Due happy
 #endif
+
 // Defines the pin in which the data is sent to the matrix.
 #define PIN 6
 
 // Defines the Matrix.
 Adafruit_NeoMatrix matrix = Adafruit_NeoMatrix(16, 16, PIN,
-                            NEO_MATRIX_TOP     + NEO_MATRIX_RIGHT +
+                            NEO_MATRIX_TOP + NEO_MATRIX_RIGHT +
                             NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG,
-                            NEO_GRB            + NEO_KHZ800);
+                            NEO_GRB + NEO_KHZ800);
 
 // Sets GREEN, RED, BLUE rotating colors for scrolling text.
 const uint16_t colors[] = {
-  matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255)
-};
-//Varibles
+    matrix.Color(255, 0, 0), matrix.Color(0, 255, 0), matrix.Color(0, 0, 255)};
+
+// Static Variables
 unsigned char sx = 5;
 unsigned char sy = 5;
 char gx;
@@ -39,7 +40,7 @@ int i = 0;
 unsigned char snakeX[256];
 unsigned char snakeY[256];
 unsigned char pointer = 4;
-int x    = matrix.width();
+int x = matrix.width();
 int pass = 0;
 //Sets Snake Color
 int sColor = matrix.Color(255, 102, 0);
@@ -56,16 +57,17 @@ int blueErase = 0;
 
 boolean Change;
 boolean Hard;
-boolean Diffculty = false;
+boolean Difficulty = false;
 boolean UP, DOWN, RIGHT, LEFT, OVER = true, ifx = true, STARTED = true;
 boolean LUP, LDOWN, LRIGHT, LLEFT;
 boolean PRINT = true;
 
 String Word = " ";
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
-  //tells matirx to start, clear the screen, and set the Brightness of the martix.
+  //tells matrix to start, clear the screen, and set the Brightness of the martix.
   matrix.begin();
   matrix.fillScreen(0);
   matrix.setTextWrap(false);
@@ -74,10 +76,10 @@ void setup() {
   matrix.show();
 
   //PULLUPs the controller so that when direction made that arduino takes input.
-  pinMode(13, INPUT_PULLUP) ;
-  pinMode(12, INPUT_PULLUP) ;
-  pinMode(11, INPUT_PULLUP) ;
-  pinMode(10, INPUT_PULLUP) ;
+  pinMode(13, INPUT_PULLUP);
+  pinMode(12, INPUT_PULLUP);
+  pinMode(11, INPUT_PULLUP);
+  pinMode(10, INPUT_PULLUP);
 
   //Setups the pins need to interface with external digital logic that will display information about the game.
   pinMode(0, OUTPUT);
@@ -96,33 +98,34 @@ void setup() {
   digitalWrite(0, LOW);
 }
 
-void loop() {
+void loop()
+{
   // put your main code here, to run repeatedly:
 
-  //Allows controls to be input seperatly from movement in game.
+  //Allows controls to be input separately from movement in game.
   if (frames >= hold)
   {
-    //lets you choosse between a hard or easy diffculty.
-    if (!Diffculty)
+    //lets you chooses between a hard or easy difficulty.
+    if (!Difficulty)
     {
       matrix.show();
       matrix.fillScreen(0);
       matrix.setCursor(x, 0);
-      
-      // Displays how to select the hard diffculty.
+
+      // Displays how to select the hard difficulty.
       matrix.setTextColor(matrix.Color(255, 93, 21));
       matrix.print("Hard");
-      matrix.drawLine(x + 27, 0, x + 27, 6, matrix.Color(255,0,0));
-      matrix.drawLine(x + 27, 0, x + 25, 2, matrix.Color(255,0,0));
-      matrix.drawLine(x + 27, 0, x + 29, 2, matrix.Color(255,0,0));
+      matrix.drawLine(x + 27, 0, x + 27, 6, matrix.Color(255, 0, 0));
+      matrix.drawLine(x + 27, 0, x + 25, 2, matrix.Color(255, 0, 0));
+      matrix.drawLine(x + 27, 0, x + 29, 2, matrix.Color(255, 0, 0));
       matrix.setCursor(x, 8);
-      
-      // Displays how to select the easy diffculty.
+
+      // Displays how to select the easy difficulty.
       matrix.print("Easy");
-      matrix.drawLine(x + 27, 15, x + 27, 8, matrix.Color(255,0,0));
-      matrix.drawLine(x + 27, 15, x + 25, 13, matrix.Color(255,0,0));
-      matrix.drawLine(x + 27, 15, x + 29, 13, matrix.Color(255,0,0));
-      
+      matrix.drawLine(x + 27, 15, x + 27, 8, matrix.Color(255, 0, 0));
+      matrix.drawLine(x + 27, 15, x + 25, 13, matrix.Color(255, 0, 0));
+      matrix.drawLine(x + 27, 15, x + 29, 13, matrix.Color(255, 0, 0));
+
       // Resets the game.
       sx = 5;
       sy = 5;
@@ -132,13 +135,15 @@ void loop() {
       RIGHT = false;
       LEFT = false;
 
-      if (--x < -29) {
+      if (--x < -29)
+      {
         x = matrix.width();
-        if (++pass >= 3) pass = 0;
+        if (++pass >= 3)
+          pass = 0;
       }
 
       // Grabs the player input if they select hard.
-         /*
+      /*
        * Hard Mode adds shedding to the game. If the Player hits the shedded skin it will also end the game.
        * An new item is added to the game that allows the player to eat themselves and the shedded skin, but
        * eating the item will increase the speed of the snake without increasing the score.
@@ -146,7 +151,7 @@ void loop() {
       if (!digitalRead(12))
       {
         Hard = true;
-        Diffculty = true;
+        Difficulty = true;
         STARTED = true;
       }
 
@@ -154,13 +159,12 @@ void loop() {
       if (!digitalRead(13))
       {
         Hard = false;
-        Diffculty = true;
+        Difficulty = true;
         STARTED = true;
       }
-
     }
     // Refreshes the game getting rid of old scores and set defaults.
-    if (STARTED && Diffculty)
+    if (STARTED && Difficulty)
     {
       matrix.fillScreen(0);
       matrix.show();
@@ -180,25 +184,25 @@ void loop() {
       STARTED = false;
       OVER = false;
       hold = 500;
-      matrix.drawPixel(cx,cy,cColor);
+      matrix.drawPixel(cx, cy, cColor);
 
       if (Hard)
       {
         gx = random(16);
         gy = random(16);
-        matrix.drawPixel(gx,gy,gColor);
+        matrix.drawPixel(gx, gy, gColor);
       }
     }
   }
-  
+
   Change = false;
-  
-  // Makes sure the snake is not outside of the boundries.
+
+  // Makes sure the snake is not outside of the boundaries.
   if (sx < 0 || sx > 15 || sy < 0 || sy > 15)
   {
     OVER = true;
   }
-  
+
   //Changes the Direction of the snake.
   if (!digitalRead(13) && !UP && !Change && !LUP)
   {
@@ -232,12 +236,14 @@ void loop() {
     digitalWrite(3, LOW);
     digitalWrite(0, LOW);
     delay(1);
-    
-    // Adds the color of the snake to the board and decects collision with the snake.
-    if (DOWN && !OVER )
+
+    // Adds the color of the snake to the board and detects collision with the snake.
+    if (DOWN && !OVER)
     {
-      if (bitRead(sy * 16, 4) == 1) {
-        if (matrix.getPixelColor(((sy + 1) * 16) + (16 - sx - 1)) == 0 || (sx == cx && sy + 1 == cy)  || (sx == gx && sy + 1 == gy)  ) {
+      if (bitRead(sy * 16, 4) == 1)
+      {
+        if (matrix.getPixelColor(((sy + 1) * 16) + (16 - sx - 1)) == 0 || (sx == cx && sy + 1 == cy) || (sx == gx && sy + 1 == gy))
+        {
           //matrix.setPixelColor(((sy + 1) *16) + (16 - sx - 1),RED);
           matrix.drawPixel(sx, ++sy, sColor);
         }
@@ -256,8 +262,10 @@ void loop() {
           }
         }
       }
-      else {
-        if (matrix.getPixelColor(((sy + 1) * 16 ) + sx) == 0  || (sx == cx && sy + 1 == cy)  || (sx == gx && sy + 1 == gy)) {
+      else
+      {
+        if (matrix.getPixelColor(((sy + 1) * 16) + sx) == 0 || (sx == cx && sy + 1 == cy) || (sx == gx && sy + 1 == gy))
+        {
           //matrix.setPixelColor(((sy +1) *16 ) + sx,RED);
           matrix.drawPixel(sx, ++sy, sColor);
         }
@@ -280,12 +288,13 @@ void loop() {
       LUP = false;
       LLEFT = false;
       LRIGHT = false;
-
     }
     if (UP && !OVER)
     {
-      if (bitRead(sy * 16, 4) == 1) {
-        if (matrix.getPixelColor(((sy - 1) * 16) + (16 - sx - 1)) == 0  || (sx == cx && sy - 1 == cy) || (sx == gx && sy - 1 == gy)) {
+      if (bitRead(sy * 16, 4) == 1)
+      {
+        if (matrix.getPixelColor(((sy - 1) * 16) + (16 - sx - 1)) == 0 || (sx == cx && sy - 1 == cy) || (sx == gx && sy - 1 == gy))
+        {
           // Used to debug the the collision function.
           //matrix.setPixelColor(((sy - 1) *16) + (16 - sx- 1),RED);
           matrix.drawPixel(sx, --sy, sColor);
@@ -305,8 +314,10 @@ void loop() {
           }
         }
       }
-      else {
-        if (matrix.getPixelColor(((sy - 1) * 16 ) + sx) == 0  || (sx == cx && sy - 1 == cy)  || (sx == gx && sy - 1 == gy)) {
+      else
+      {
+        if (matrix.getPixelColor(((sy - 1) * 16) + sx) == 0 || (sx == cx && sy - 1 == cy) || (sx == gx && sy - 1 == gy))
+        {
           // Used to debug the the collision function.
           //matrix.setPixelColor(((sy -1) *16 ) + sx,RED);
           matrix.drawPixel(sx, --sy, sColor);
@@ -334,8 +345,10 @@ void loop() {
 
     if (RIGHT && !OVER)
     {
-      if (bitRead(sy * 16, 4) == 0) {
-        if (matrix.getPixelColor((sy * 16) + (16 - (sx + 2))) == 0  || (sx + 1 == cx && sy == cy) || (sx + 1 == gx && sy == gy)) {
+      if (bitRead(sy * 16, 4) == 0)
+      {
+        if (matrix.getPixelColor((sy * 16) + (16 - (sx + 2))) == 0 || (sx + 1 == cx && sy == cy) || (sx + 1 == gx && sy == gy))
+        {
           //matrix.setPixelColor((sy *16) + (16 - (sx + 2)),RED);
           matrix.drawPixel(++sx, sy, sColor);
         }
@@ -354,8 +367,10 @@ void loop() {
           }
         }
       }
-      else {
-        if (matrix.getPixelColor((sy * 16 ) + (sx + 1)) == 0  || (sx + 1 == cx && sy == cy) || (sx + 1 == gx && sy == gy)) {
+      else
+      {
+        if (matrix.getPixelColor((sy * 16) + (sx + 1)) == 0 || (sx + 1 == cx && sy == cy) || (sx + 1 == gx && sy == gy))
+        {
           //matrix.setPixelColor((sy *16 ) + (sx + 1),RED);
           matrix.drawPixel(++sx, sy, sColor);
         }
@@ -382,8 +397,10 @@ void loop() {
 
     if (LEFT && !OVER)
     {
-      if (bitRead(sy * 16, 4) == 0) {
-        if (matrix.getPixelColor((sy * 16) + (16 - (sx))) == 0  || (sx - 1 == cx && sy == cy) || (sx - 1 == gx && sy == gy)) {
+      if (bitRead(sy * 16, 4) == 0)
+      {
+        if (matrix.getPixelColor((sy * 16) + (16 - (sx))) == 0 || (sx - 1 == cx && sy == cy) || (sx - 1 == gx && sy == gy))
+        {
           //.setPixelColor((sy *16) + (16 - (sx)),RED);
           matrix.drawPixel(--sx, sy, sColor);
         }
@@ -402,8 +419,10 @@ void loop() {
           }
         }
       }
-      else {
-        if (matrix.getPixelColor((sy * 16 ) + (sx - 1)) == 0  || (sx - 1 == cx && sy == cy) || (sx - 1 == gx && sy == gy)) {
+      else
+      {
+        if (matrix.getPixelColor((sy * 16) + (sx - 1)) == 0 || (sx - 1 == cx && sy == cy) || (sx - 1 == gx && sy == gy))
+        {
           // matrix.setPixelColor((sy *16 ) + (sx - 1),RED);
           matrix.drawPixel(--sx, sy, sColor);
         }
@@ -446,11 +465,12 @@ void loop() {
       {
         digitalWrite(4, LOW);
       }
-      if (hold > 100) {
+      if (hold > 100)
+      {
         hold = hold - 10;
       }
     }
-    
+
     // Eats and spawns a Blue Eraser for hard mode.
     if (gx == sx && gy == sy && !OVER && Hard)
     {
@@ -473,18 +493,18 @@ void loop() {
     snakeY[pointer] = sy;
     if (pointer - tailLength < 0 && !Hard)
     {
-      matrix.drawPixel(snakeX[pointer + 256 - tailLength], snakeY[pointer + 256 - tailLength] , 0);
-      if(snakeX[pointer + 256 - tailLength]== cx && snakeY[pointer + 256 - tailLength == cy])
+      matrix.drawPixel(snakeX[pointer + 256 - tailLength], snakeY[pointer + 256 - tailLength], 0);
+      if (snakeX[pointer + 256 - tailLength] == cx && snakeY[pointer + 256 - tailLength == cy])
       {
-        matrix.drawPixel(cx,cy,cColor);
+        matrix.drawPixel(cx, cy, cColor);
       }
     }
     else
     {
       matrix.drawPixel(snakeX[pointer - tailLength], snakeY[pointer - tailLength], 0);
-      if(snakeX[pointer - tailLength]== cx && snakeY[pointer - tailLength == cy])
+      if (snakeX[pointer - tailLength] == cx && snakeY[pointer - tailLength == cy])
       {
-        matrix.drawPixel(cx,cy,cColor);
+        matrix.drawPixel(cx, cy, cColor);
       }
     }
 
@@ -493,10 +513,10 @@ void loop() {
     if (times == 3)
     {
       times = 0;
-      Diffculty = false;
+      Difficulty = false;
     }
     // Displays that the game is over and the score of the player.
-    if (OVER == true && Diffculty)
+    if (OVER == true && Difficulty)
     {
       hold = 100;
       matrix.fillScreen(0);
@@ -506,9 +526,11 @@ void loop() {
       {
         times = 3;
       }
-      if (--x < -46) {
+      if (--x < -46)
+      {
         x = matrix.width();
-        if (++pass >= 3) pass = 0;
+        if (++pass >= 3)
+          pass = 0;
         matrix.setTextColor(colors[pass]);
         times++;
       }
