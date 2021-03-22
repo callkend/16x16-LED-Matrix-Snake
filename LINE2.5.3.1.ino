@@ -221,7 +221,7 @@ Location_t DrawRandomLocation(int color)
 void ResetGame(void)
 {
   // Reset the scoreboard
-  digitalWrite(SCORE_BOARD_RESET_PIN, LOW);
+  digitalWrite(SCORE_BOARD_RESET_PIN, HIGH);
 
   matrix.fillScreen(BACKGROUND_COLOR);
   matrix.show();
@@ -243,7 +243,7 @@ void ResetGame(void)
     Gobble = DrawRandomLocation(GOBBLE_COLOR);
   }
 
-  digitalWrite(SCORE_BOARD_RESET_PIN, HIGH);
+  digitalWrite(SCORE_BOARD_RESET_PIN, LOW);
 }
 
 void setup()
@@ -377,10 +377,11 @@ void loop()
 
     case RUNNING_GAME:
     {
+      delay(1);
       digitalWrite(GOBBLE_UPDOWN_SELECT_PIN, LOW);
       digitalWrite(GOBBLE_CLOCK_PIN, LOW);
       digitalWrite(SCORE_COUNT_PIN, LOW);
-      delay(1);
+      
 
       SnakeDirection = NextSnakeDirection;
 
